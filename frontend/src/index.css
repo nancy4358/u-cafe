@@ -1,0 +1,10 @@
+body {
+  margin: 0;
+  font-family: 'Noto Sans TC', sans-serif;
+  background-color: #ffffff;
+  color: #333;
+}
+
+#root {
+  background-color: #fff;
+}

@@ -1,0 +1,53 @@
+.store-list {
+    max-width: 1000px;
+    margin: 2rem auto;
+    padding: 0 1rem;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 1.5rem;
+  }
+  
+  .store-card {
+    text-decoration: none;
+    color: #222;
+    background-color: #fff;
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+    transition: transform 0.2s;
+  }
+  
+  .store-card:hover {
+    transform: translateY(-4px);
+  }
+  
+  .store-card img {
+    width: 100%;
+    height: 200px;
+    object-fit: cover;
+  }
+  
+  .store-card h3 {
+    margin: 1rem;
+    font-size: 1.2rem;
+  }
+  
+  .store-card p {
+    margin: 0 1rem 1rem;
+    font-size: 0.9rem;
+    color: #555;
+  }
+  
+  .store-container{
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 40px 20px;
+    background: #fff;
+  }
+  .title {
+    font-size: 32px;
+    margin-bottom: 30px;
+    border-left: 6px solid #1f80e1;
+    font-weight: bold;
+    margin-left: 100px;
+  }

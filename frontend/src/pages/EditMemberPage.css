@@ -1,0 +1,57 @@
+.edit-member {
+  padding: 40px;
+  background-color: #fff;
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+.edit-member h1 {
+  font-size: 28px;
+  font-weight: bold;
+  margin-bottom: 24px;
+  color: #222;
+  border-bottom: 2px solid #ccc;
+  padding-bottom: 10px;
+}
+
+.edit-member form {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.edit-member label {
+  font-weight: bold;
+  color: #333;
+  display: flex;
+  flex-direction: column;
+  font-size: 16px;
+}
+
+.edit-member input[type="text"],
+.edit-member input[type="date"] {
+  margin-top: 6px;
+  padding: 10px 14px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  font-size: 16px;
+  background-color: #f9f9f9;
+}
+
+.edit-member button {
+  width: 120px;
+  padding: 10px 16px;
+  border: none;
+  background-color: #005bac;
+  color: white;
+  border-radius: 6px;
+  font-size: 16px;
+  font-weight: bold;
+  cursor: pointer;
+  align-self: flex-end;
+  transition: background-color 0.3s ease;
+}
+
+.edit-member button:hover {
+  background-color: #004494;
+}

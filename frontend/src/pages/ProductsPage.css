@@ -1,0 +1,155 @@
+.products-page {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 2rem 1rem;
+  font-family: 'Noto Sans TC', sans-serif;
+  color: #1a1a1a;
+}
+
+.products-page h1 {
+  font-size: 2.2rem;
+  font-weight: 700;
+  margin-bottom: 1.5rem;
+  color: #111;
+}
+
+.product-layout {
+  display: flex;
+  gap: 2rem;
+}
+
+.product-sidebar {
+  width: 220px;
+  flex-shrink: 0;
+}
+
+.product-sidebar ul {
+  list-style: none;
+  padding-left: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.sidebar-link {
+  display: block;
+  padding: 0.6rem 0.5rem;
+  color: #111;
+  text-decoration: none;
+  font-weight: 700;
+  font-size: 1.1rem;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.sidebar-link:hover {
+  color: #868e94;
+}
+
+.sidebar-link.active {
+
+  color: #0077cc;
+}
+
+.product-content {
+  flex: 1;
+}
+
+.product-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 2rem;
+}
+
+.product-card {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  height: 100%;
+  background-color: #fff;
+  border-radius: 10px;
+  overflow: hidden;
+  text-decoration: none;
+  color: inherit;
+}
+
+.product-image {
+  width: 100%;
+  height: 200px;
+  object-fit: cover;
+}
+
+.product-info {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between; 
+
+  text-align: center;
+  
+}
+
+.product-title {
+  font-size: 1.1rem;
+  font-weight: 600;
+  margin-bottom: 0.4rem;
+  color: #111;
+}
+
+.product-description {
+  font-size: 0.9rem;
+  color: #555;
+  margin-bottom: 0.6rem;
+  min-height: 2.6em;
+  line-height: 1.4;
+}
+
+.product-price {
+  font-size: 1rem;
+  font-weight: 600;
+  color: #0077cc;
+}
+
+/* RWD 響應式設計調整 */
+@media (max-width: 768px) {
+  .product-layout {
+    flex-direction: column;
+  }
+
+  .product-sidebar {
+    width: 100%;
+    margin-bottom: 1rem;
+  }
+
+  .product-sidebar ul {
+    flex-direction: row;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+    justify-content: center;
+  }
+
+  .sidebar-link {
+    padding: 0.5rem 0.8rem;
+    font-size: 1rem;
+    text-align: center;
+    border-radius: 6px;
+    background-color: #f5f5f5;
+  }
+
+  .product-content {
+    width: 100%;
+  }
+
+  .product-list {
+    grid-template-columns: 1fr;
+  }
+
+  .product-card {
+    max-width: 100%;
+    margin: 0 auto;
+  }
+
+  .product-info {
+    padding: 1rem;
+  }
+}

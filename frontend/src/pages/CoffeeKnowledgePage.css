@@ -1,0 +1,167 @@
+.article-list {
+  display: flex;
+  flex-direction: column;
+  align-items: center; 
+  gap: 60px;
+  margin: 0 auto;
+  width: 100%;
+}
+
+.article-block {
+  width: 70%;
+  max-width: 1000px;
+}
+
+.article-row {
+  display: flex;
+  align-items: center;
+  gap: 40px;
+}
+
+.article-row.reverse {
+  flex-direction: row-reverse;
+}
+
+.article-image img {
+  width: 500px;
+  height: 300px;
+  border-radius: 12px;
+  object-fit: cover;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+}
+
+.article-text {
+  flex: 1;
+}
+
+.article-text h2 {
+  font-size: 22px;
+  font-weight: bold;
+  margin-bottom: 12px;
+}
+
+.article-text .summary {
+  font-size: 15px;
+  color: #444;
+  margin-bottom: 12px;
+  line-height: 1.6;
+}
+
+.view-detail {
+  display: inline-block;
+  margin-top: 10px;
+  color: #1f80e1;
+  font-size: 14px;
+  text-decoration: none;
+  font-weight: 500;
+}
+
+.view-detail:hover {
+  text-decoration: underline;
+}
+
+.tag {
+  display: inline-block;
+  color: #1f80e1 !important;;
+  background-color: #e6f0fb ; /* 冷灰藍底 */
+  font-size: 12px;
+  font-weight: 500;
+  padding: 4px 8px;
+  border-radius: 16px;
+  margin-right: 6px;
+}
+.tags {
+  margin-top: 12px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+
+.article-block-link {
+  text-decoration: none;
+  color: inherit;
+  display: block;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.article-block-link:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 6px 18px rgba(0,0,0,0.1);
+}
+
+
+.article-block {
+  width: 100%;
+  max-width: 1000px;
+}
+
+
+.article-list {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 60px;
+  margin: 0 auto;
+  width: 100%;
+}
+
+.article-row {
+  display: flex;
+  align-items: center;
+  gap: 40px;
+  flex-wrap: wrap; 
+}
+
+
+.reverse .article-row {
+  flex-direction: row-reverse;
+}
+
+@media (max-width: 768px) {
+  .title {
+    display: none;
+  }
+
+  .article-block {
+    width: 90%;
+    margin: 0 auto;
+    padding: 10px 10px;
+  }
+
+  .article-row {
+    flex-direction: column !important;
+    align-items: center;
+    text-align: center;
+  }
+
+  .article-image {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+  }
+
+  .article-image img {
+    width: 100%;
+    height: auto;
+    border-radius: 12px;
+  }
+
+  .article-text {
+    width: 100%;
+  }
+
+  .article-text h2 {
+    font-size: 18px;
+  }
+
+  .article-text .summary {
+    font-size: 14px;
+  }
+
+  .tags {
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+}
