@@ -6,7 +6,12 @@
   height: 360px;
   padding-top: 50px;
 }
-
+.banner-image {
+  width: 100%;
+  height: auto;
+  object-fit: cover;
+  max-height: 500px;
+}
 .slider-track {
   display: flex;
   width: 100%;

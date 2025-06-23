@@ -1,99 +1,81 @@
-import { useEffect, useState, useRef } from 'react';
-import supabase from '../api/supabase';
-import './BannerSlider.css';
+import React, { useEffect, useState, useRef } from 'react';
+import { supabase } from '../supabaseClient';
+import { useLocation } from 'react-router-dom';
+import './BannerSlider.css'; // 確保你有這個CSS
 
 function BannerSlider() {
   const [banners, setBanners] = useState([]);
-  const [current, setCurrent] = useState(1); 
-  const [isTransitioning, setIsTransitioning] = useState(true);
-  const trackRef = useRef(null);
+  const [current, setCurrent] = useState(0);
+  const [isLoading, setIsLoading] = useState(true);
+  const location = useLocation();
+  const autoSlideRef = useRef();
 
-  // 取得資料
   useEffect(() => {
     async function fetchBanners() {
-      const { data } = await supabase.from('banners').select('*').order('created_at');
-      if (data?.length > 0) {
+      const { data, error } = await supabase
+        .from('banners')
+        .select('*')
+        .order('created_at');
+      if (data) {
         setBanners(data);
-        setCurrent(1);
+        setCurrent(0);
       }
+      setIsLoading(false);
     }
     fetchBanners();
-  },[location.key]);
+  }, [location.key]);
 
-  // 自動輪播
   useEffect(() => {
-    const timer = setInterval(() => {
-      nextSlide();
-    }, 4000);
-    return () => clearInterval(timer);
-  }, [banners, current]);
+    autoSlideRef.current = nextSlide;
+  });
+
+  useEffect(() => {
+    const play = () => {
+      autoSlideRef.current();
+    };
+    const interval = setInterval(play, 4000);
+    return () => clearInterval(interval);
+  }, [banners]);
 
   const nextSlide = () => {
-    setIsTransitioning(true);
-    setCurrent((prev) => prev + 1);
+    setCurrent((prev) => (prev + 1) % banners.length);
   };
 
   const prevSlide = () => {
-    setIsTransitioning(true);
-    setCurrent((prev) => prev - 1);
+    setCurrent((prev) => (prev - 1 + banners.length) % banners.length);
   };
 
-  const handleTransitionEnd = () => {
-    if (current === banners.length + 1) {
-      setIsTransitioning(false);
-      setCurrent(1);
-    } else if (current === 0) {
-      setIsTransitioning(false);
-      setCurrent(banners.length);
-    }
-  };
-
-  const slideStyle = {
-    transform: `translateX(-${current * 100}%)`,
-    transition: isTransitioning ? 'transform 0.6s ease-in-out' : 'none',
-  };
-
+  if (isLoading) return <div className="banner-loading">載入中...</div>;
   if (banners.length === 0) return null;
 
   return (
     <div className="banner-slider">
+      <button className="arrow left" onClick={prevSlide}>‹</button>
+      <button className="arrow right" onClick={nextSlide}>›</button>
 
-      <div className="arrows left" onClick={prevSlide}>&lt;</div>
-      <div className="arrows right" onClick={nextSlide}>&gt;</div>
+      {banners.map((banner, index) => (
+        <div
+          className={`slide ${index === current ? 'active' : ''}`}
+          key={banner.id}
+        >
+          {index === current && (
+            <img
+              src={banner.image_url}
+              alt={`Banner ${index + 1}`}
+              className="banner-image"
+              loading="lazy"
+              onError={(e) => (e.target.style.display = 'none')}
+            />
+          )}
+        </div>
+      ))}
 
-
-      <div
-        className="slider-track"
-        style={slideStyle}
-        onTransitionEnd={handleTransitionEnd}
-        ref={trackRef}
-      >
-
-        <a className="slide-item">
-          <img src={banners[banners.length - 1]?.image_url} alt="last-banner" loading="lazy" />
-        </a>
-
-
-        {banners.map((banner) => (
-          <a key={banner.id} href={banner.link_url || '#'} className="slide-item">
-            <img src={banner.image_url} alt={banner.alt || 'banner'} loading="lazy" />
-          </a>
-        ))}
-
-        <a className="slide-item">
-          <img src={banners[0]?.image_url} alt="first-banner" loading="lazy" />
-        </a>
-      </div>
-
-      <div className="dot-indicator">
+      <div className="dots">
         {banners.map((_, index) => (
           <span
             key={index}
-            className={`dot ${current === index + 1 ? 'active' : ''}`}
-            onClick={() => {
-              setIsTransitioning(true);
-              setCurrent(index + 1);
-            }}
+            className={`dot ${index === current ? 'active' : ''}`}
+            onClick={() => setCurrent(index)}
           />
         ))}
       </div>
