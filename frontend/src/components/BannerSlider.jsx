@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useRef } from 'react';
-import { supabase } from '../supabaseClient';
+import { supabase } from "../api/supabase.js";
 import { useLocation } from 'react-router-dom';
-import './BannerSlider.css'; // 確保你有這個CSS
+import './BannerSlider.css'; 
 
 function BannerSlider() {
   const [banners, setBanners] = useState([]);
