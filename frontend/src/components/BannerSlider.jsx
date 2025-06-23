@@ -8,16 +8,17 @@ function BannerSlider() {
   const [isTransitioning, setIsTransitioning] = useState(true);
   const trackRef = useRef(null);
 
+  // 取得資料
   useEffect(() => {
     async function fetchBanners() {
       const { data } = await supabase.from('banners').select('*').order('created_at');
-      if (data && data.length > 0) {
+      if (data?.length > 0) {
         setBanners(data);
-        setCurrent(1); 
+        setCurrent(1);
       }
     }
     fetchBanners();
-  }, []);
+  },[location.key]);
 
   // 自動輪播
   useEffect(() => {
@@ -56,8 +57,10 @@ function BannerSlider() {
 
   return (
     <div className="banner-slider">
+
       <div className="arrows left" onClick={prevSlide}>&lt;</div>
       <div className="arrows right" onClick={nextSlide}>&gt;</div>
+
 
       <div
         className="slider-track"
@@ -67,34 +70,33 @@ function BannerSlider() {
       >
 
         <a className="slide-item">
-          <img src={banners[banners.length - 1]?.image_url} alt="" />
+          <img src={banners[banners.length - 1]?.image_url} alt="last-banner" loading="lazy" />
         </a>
 
- 
+
         {banners.map((banner) => (
           <a key={banner.id} href={banner.link_url || '#'} className="slide-item">
-            <img src={banner.image_url} alt={banner.alt || 'banner'} />
+            <img src={banner.image_url} alt={banner.alt || 'banner'} loading="lazy" />
           </a>
         ))}
 
-
         <a className="slide-item">
-          <img src={banners[0]?.image_url} alt="" />
+          <img src={banners[0]?.image_url} alt="first-banner" loading="lazy" />
         </a>
       </div>
-      <div className="dot-indicator">
-  {banners.map((_, index) => (
-    <span
-      key={index}
-      className={`dot ${current === index + 1 ? 'active' : ''}`}
-      onClick={() => {
-        setIsTransitioning(true);
-        setCurrent(index + 1);
-      }}
-    />
-  ))}
-</div>
 
+      <div className="dot-indicator">
+        {banners.map((_, index) => (
+          <span
+            key={index}
+            className={`dot ${current === index + 1 ? 'active' : ''}`}
+            onClick={() => {
+              setIsTransitioning(true);
+              setCurrent(index + 1);
+            }}
+          />
+        ))}
+      </div>
     </div>
   );
 }
