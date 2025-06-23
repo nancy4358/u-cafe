@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useRef } from 'react';
-import { supabase } from "@/api/supabase";
+import supabase from '@/api/supabase';
 import { useLocation } from 'react-router-dom';
 import './BannerSlider.css'; 
 

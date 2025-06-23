@@ -31,7 +31,7 @@
   border-radius: 10px;
 }
 
-.arrows {
+.arrow {
   position: absolute;
   top: 50%;
   transform: translateY(-50%);
@@ -42,11 +42,14 @@
   cursor: pointer;
   z-index: 10;
 }
-.arrows.left {
+.arrow.left {
   left: 10px;
 }
-.arrows.right {
+.arrow.right {
   right: 10px;
+}
+.arrow:hover {
+  background: rgba(0, 0, 0, 0.6);
 }
 .dot-indicator {
   position: absolute;
