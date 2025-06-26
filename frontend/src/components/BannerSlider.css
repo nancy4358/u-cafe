@@ -108,6 +108,10 @@
 @media screen and (max-width: 480px) {
   .banner-slider {
     height: 180px;
+    
+  }
+  .arrow{
+    display: none;
   }
 
   .slide-item img {
@@ -117,5 +121,9 @@
   .dot-indicator {
     bottom: 10px;
     gap: 4px;
+  }
+  .slider-track {
+    touch-action: pan-y;
+    user-select: none;
   }
 }

@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useRef } from 'react';
 import supabase from '@/api/supabase';
 import { useLocation } from 'react-router-dom';
-import './BannerSlider.css'; 
+import './BannerSlider.css';
 
 function BannerSlider() {
   const [banners, setBanners] = useState([]);
@@ -10,9 +10,12 @@ function BannerSlider() {
   const location = useLocation();
   const autoSlideRef = useRef();
 
+  const touchStartX = useRef(0);
+  const touchEndX = useRef(0);
+
   useEffect(() => {
     async function fetchBanners() {
-      const { data, error } = await supabase
+      const { data } = await supabase
         .from('banners')
         .select('*')
         .order('created_at');
@@ -26,14 +29,13 @@ function BannerSlider() {
   }, [location.key]);
 
   useEffect(() => {
-    autoSlideRef.current = nextSlide;
+    autoSlideRef.current = () => {
+      setCurrent((prev) => (prev + 1) % banners.length);
+    };
   });
 
   useEffect(() => {
-    const play = () => {
-      autoSlideRef.current();
-    };
-    const interval = setInterval(play, 4000);
+    const interval = setInterval(() => autoSlideRef.current(), 4000);
     return () => clearInterval(interval);
   }, [banners]);
 
@@ -45,6 +47,21 @@ function BannerSlider() {
     setCurrent((prev) => (prev - 1 + banners.length) % banners.length);
   };
 
+  const handleTouchStart = (e) => {
+    touchStartX.current = e.touches[0].clientX;
+  };
+
+  const handleTouchMove = (e) => {
+    touchEndX.current = e.touches[0].clientX;
+  };
+
+  const handleTouchEnd = () => {
+    const deltaX = touchStartX.current - touchEndX.current;
+    if (Math.abs(deltaX) > 50) {
+      deltaX > 0 ? nextSlide() : prevSlide();
+    }
+  };
+
   if (isLoading) return <div className="banner-loading">載入中...</div>;
   if (banners.length === 0) return null;
 
@@ -53,24 +70,29 @@ function BannerSlider() {
       <button className="arrow left" onClick={prevSlide}>‹</button>
       <button className="arrow right" onClick={nextSlide}>›</button>
 
-      {banners.map((banner, index) => (
-        <div
-          className={`slide ${index === current ? 'active' : ''}`}
-          key={banner.id}
-        >
-          {index === current && (
+      <div
+        className="slider-track"
+        style={{
+          transform: `translateX(-${current * 100}%)`,
+          transition: 'transform 0.5s ease-in-out',
+        }}
+        onTouchStart={handleTouchStart}
+        onTouchMove={handleTouchMove}
+        onTouchEnd={handleTouchEnd}
+      >
+        {banners.map((banner) => (
+          <div className="slide-item" key={banner.id}>
             <img
               src={banner.image_url}
-              alt={`Banner ${index + 1}`}
-              className="banner-image"
+              alt="Banner"
               loading="lazy"
               onError={(e) => (e.target.style.display = 'none')}
             />
-          )}
-        </div>
-      ))}
+          </div>
+        ))}
+      </div>
 
-      <div className="dots">
+      <div className="dot-indicator">
         {banners.map((_, index) => (
           <span
             key={index}

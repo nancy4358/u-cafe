@@ -35,7 +35,7 @@ function FaqPage() {
           <div className="faq-item" key={index}>
             <button className="faq-question" onClick={() => toggle(index)}>
               {item.question}
-              <span className="arrow">{activeIndex === index ? '▲' : '▼'}</span>
+              <span className="faq-arrow">{activeIndex === index ? '▲' : '▼'}</span>
             </button>
             {activeIndex === index && (
               <div className="faq-answer">{item.answer}</div>
