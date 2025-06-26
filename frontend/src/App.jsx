@@ -19,6 +19,7 @@ import MemberLayout from './components/MemberLayout';
 import AboutPage from './pages/AboutPage';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import ScrollToTop from './pages/ScrollToTop';
 
 
 
@@ -30,7 +31,7 @@ function App() {
     <BrowserRouter>
     <Layout>
     <ToastContainer position="top-center" autoClose={2000} />
-
+    <ScrollToTop />
       <Routes>
 
         <Route path="/" element={<HomePage />} />
