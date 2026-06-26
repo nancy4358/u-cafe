@@ -1,8 +1,7 @@
 import { useContext, useEffect, useState } from 'react';
 import { AuthContext } from '../contexts/AuthContext';
 import { useNavigate } from 'react-router-dom';
-import supabase from '../api/supabase';
-import './EditMemberPage.css';
+import '../styles/pages/EditMemberPage.css';
 
 function EditMemberPage() {
   const { user } = useContext(AuthContext);
@@ -10,25 +9,30 @@ function EditMemberPage() {
   const [formData, setFormData] = useState({ full_name: '', phone: '', birthday: '' });
 
   useEffect(() => {
-    async function fetchProfile() {
+    function fetchProfile() {
       if (user) {
-        const { data } = await supabase
-          .from('members')
-          .select('full_name, phone, birthday')
-          .eq('id', user.id)
-          .single();
-        if (data) setFormData(data);
+        const members = JSON.parse(localStorage.getItem('members')) || [];
+        const member = members.find((item) => item.id === user.id);
+        if (member) {
+          setFormData({
+            full_name: member.full_name || '',
+            phone: member.phone || '',
+            birthday: member.birthday || '',
+          });
+        }
       }
     }
     fetchProfile();
   }, [user]);
 
-  async function handleSubmit(e) {
+  function handleSubmit(e) {
     e.preventDefault();
-    const { error } = await supabase
-      .from('members')
-      .upsert({ id: user.id, ...formData });
-    if (!error) navigate('/member');
+    const members = JSON.parse(localStorage.getItem('members')) || [];
+    const nextMembers = members.map((member) => (
+      member.id === user.id ? { ...member, ...formData } : member
+    ));
+    localStorage.setItem('members', JSON.stringify(nextMembers));
+    navigate('/member');
   }
 
   function handleChange(e) {

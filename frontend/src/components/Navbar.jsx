@@ -1,38 +1,32 @@
-import './Navbar.css';
+import '../styles/components/Navbar.css';
 import { Link, useNavigate } from 'react-router-dom';
 import { useEffect, useState } from 'react';
-import supabase from '../api/supabase';
+import { api } from '../api/client';
+import { useAuth } from '../contexts/AuthContext';
 import { toast } from 'react-toastify';
 
 function Navbar() {
   const [stores, setStores] = useState([]);
   const [isOpen, setIsOpen] = useState(null);
-  const [user, setUser] = useState(null);
   const [menuOpen, setMenuOpen] = useState(false);
+  const { user, signOut } = useAuth();
   const navigate = useNavigate();
 
   useEffect(() => {
     async function fetchStores() {
-      const { data } = await supabase.from('stores').select('name, slug').order('created_at');
-      setStores(data);
-    }
-
-    async function fetchUser() {
-      const { data: { session } } = await supabase.auth.getSession();
-      setUser(session?.user ?? null);
-
-      supabase.auth.onAuthStateChange((_event, session) => {
-        setUser(session?.user ?? null);
-      });
+      try {
+        const data = await api.getStores();
+        setStores(data);
+      } catch (error) {
+        console.error(error);
+      }
     }
 
     fetchStores();
-    fetchUser();
   }, []);
 
-  const handleSignOut = async () => {
-    await supabase.auth.signOut();
-    setUser(null);
+  const handleSignOut = () => {
+    signOut();
     toast.success('會員已登出');
     navigate('/');
   };

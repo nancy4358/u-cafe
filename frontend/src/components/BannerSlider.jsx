@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useRef } from 'react';
-import supabase from '@/api/supabase';
+import { api } from '@/api/client';
 import { useLocation } from 'react-router-dom';
-import './BannerSlider.css';
+import '../styles/components/BannerSlider.css';
 
 function BannerSlider() {
   const [banners, setBanners] = useState([]);
@@ -15,13 +15,12 @@ function BannerSlider() {
 
   useEffect(() => {
     async function fetchBanners() {
-      const { data } = await supabase
-        .from('banners')
-        .select('*')
-        .order('created_at');
-      if (data) {
+      try {
+        const data = await api.getBanners();
         setBanners(data);
         setCurrent(0);
+      } catch (error) {
+        console.error(error);
       }
       setIsLoading(false);
     }

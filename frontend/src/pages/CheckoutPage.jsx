@@ -1,7 +1,7 @@
 import { useCart } from '../contexts/CartContext';
 import { useNavigate } from 'react-router-dom';
 import { useEffect, useState } from 'react';
-import './CheckoutPage.css';
+import '../styles/pages/CheckoutPage.css';
 
 function CheckoutPage() {
   const { cartItems, setCartItems } = useCart();

@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
-import supabase from '../api/supabase';
-import './StoreDetailPage.css';
+import { api } from '../api/client';
+import '../styles/pages/StoreDetailPage.css';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faMapMarkerAlt } from '@fortawesome/free-solid-svg-icons';
 import { faStore } from '@fortawesome/free-solid-svg-icons';
@@ -12,8 +12,12 @@ function StoreDetailPage() {
 
   useEffect(() => {
     async function fetchStore() {
-      const { data } = await supabase.from('stores').select('*').eq('slug', slug).single();
-      setStore(data);
+      try {
+        const data = await api.getStore(slug);
+        setStore(data);
+      } catch (error) {
+        console.error(error);
+      }
     }
     fetchStore();
   }, [slug]);

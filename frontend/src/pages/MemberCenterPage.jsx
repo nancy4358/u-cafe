@@ -1,8 +1,7 @@
 import { useContext, useEffect, useState, useRef } from 'react';
 import { AuthContext } from '../contexts/AuthContext';
 import { useNavigate, Link } from 'react-router-dom';
-import supabase from '../api/supabase';
-import './MemberCenterPage.css';
+import '../styles/pages/MemberCenterPage.css';
 
 function MemberCenterPage() {
   const { user } = useContext(AuthContext);
@@ -15,22 +14,13 @@ function MemberCenterPage() {
   useEffect(() => {
     if (!user) return;
 
-    async function fetchData() {
-      const { data: member, error: profileErr } = await supabase
-        .from('members')
-        .select('full_name, phone, birthday, avatar_url')
-        .eq('id', user.id)
-        .single();
-      if (!profileErr && member) {
-        setProfile(member);
+    function fetchData() {
+      const members = JSON.parse(localStorage.getItem('members')) || [];
+      const member = members.find((item) => item.id === user.id);
 
-        if (member.avatar_url) {
-          const { data: publicData } = supabase
-            .storage
-            .from('avatars')
-            .getPublicUrl(member.avatar_url);
-          setAvatarUrl(`${publicData.publicUrl}?t=${Date.now()}`);
-        }
+      if (member) {
+        setProfile(member);
+        setAvatarUrl(member.avatar_url || null);
       }
     }
 
@@ -43,41 +33,22 @@ function MemberCenterPage() {
 
     setIsUploading(true); 
 
-    const fileExt = file.name.split('.').pop();
-    const filePath = `${user.id}/avatar.${fileExt}`;
-
-    await supabase.storage.from('avatars').remove([filePath]);
-
-    const { error: uploadErr } = await supabase
-      .storage
-      .from('avatars')
-      .upload(filePath, file);
-
-    if (uploadErr) {
+    const reader = new FileReader();
+    reader.onload = () => {
+      const avatarDataUrl = reader.result;
+      const members = JSON.parse(localStorage.getItem('members')) || [];
+      const nextMembers = members.map((member) => (
+        member.id === user.id ? { ...member, avatar_url: avatarDataUrl } : member
+      ));
+      localStorage.setItem('members', JSON.stringify(nextMembers));
+      setAvatarUrl(avatarDataUrl);
+      setIsUploading(false);
+    };
+    reader.onerror = () => {
       alert('上傳失敗');
-      console.error(uploadErr);
       setIsUploading(false);
-      return;
-    }
-
-    const { error: updateErr } = await supabase
-      .from('members')
-      .update({ avatar_url: filePath })
-      .eq('id', user.id);
-
-    if (updateErr) {
-      alert('資料更新失敗');
-      console.error(updateErr);
-      setIsUploading(false);
-      return;
-    }
-
-    const { data: publicData } = supabase
-      .storage
-      .from('avatars')
-      .getPublicUrl(filePath);
-    setAvatarUrl(`${publicData.publicUrl}?t=${Date.now()}`);
-    setIsUploading(false); 
+    };
+    reader.readAsDataURL(file);
   };
 
   if (!user) {

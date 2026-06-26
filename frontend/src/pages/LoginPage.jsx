@@ -1,22 +1,27 @@
 import { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { toast } from 'react-toastify';
-import supabase from '../api/supabase';
-import './LoginPage.css';
+import { useAuth } from '../contexts/AuthContext';
+import '../styles/pages/LoginPage.css';
 
 function LoginPage() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const navigate = useNavigate();
+  const { signIn } = useAuth();
 
-  const handleLogin = async (e) => {
+  const handleLogin = (e) => {
     e.preventDefault();
-    const { error } = await supabase.auth.signInWithPassword({ email, password });
-    if (error) {
+
+    const members = JSON.parse(localStorage.getItem('members')) || [];
+    const member = members.find((item) => item.email === email && item.password === password);
+
+    if (!member) {
       setError('帳號或密碼錯誤，請再確認一次');
     } else {
       setError('');
+      signIn({ id: member.id, email: member.email });
       toast.success('登入成功！');
       setTimeout(() => navigate('/'), 2000); 
     }

@@ -1,7 +1,7 @@
 import { useParams, Link } from 'react-router-dom';
 import { useEffect, useState } from 'react';
-import supabase from '../api/supabase';
-import './CoffeeArticlePage.css';
+import { api } from '../api/client';
+import '../styles/pages/CoffeeArticlePage.css';
 
 function CoffeeArticlePage() {
   const { slug } = useParams();
@@ -9,12 +9,12 @@ function CoffeeArticlePage() {
 
   useEffect(() => {
     async function fetchArticle() {
-      const { data } = await supabase
-        .from('coffee_knowledge_articles')
-        .select('*')
-        .eq('slug', slug)
-        .single();
-      setArticle(data);
+      try {
+        const data = await api.getCoffeeArticle(slug);
+        setArticle(data);
+      } catch (error) {
+        console.error(error);
+      }
     }
 
     fetchArticle();

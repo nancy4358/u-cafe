@@ -1,18 +1,19 @@
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
-import supabase from '../api/supabase';
-import './CoffeeKnowledgePage.css';
+import { api } from '../api/client';
+import '../styles/pages/CoffeeKnowledgePage.css';
 
 function CoffeeKnowledgePage() {
   const [articles, setArticles] = useState([]);
 
   useEffect(() => {
     async function fetchArticles() {
-      const { data } = await supabase
-        .from('coffee_knowledge_articles')
-        .select('*')
-        .order('created_at', { ascending: false });
-      setArticles(data);
+      try {
+        const data = await api.getCoffeeArticles();
+        setArticles(data);
+      } catch (error) {
+        console.error(error);
+      }
     }
     fetchArticles();
   }, []);

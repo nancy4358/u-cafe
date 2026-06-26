@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
-import supabase from '../api/supabase';
-import './SignupPage.css';
+import { useAuth } from '../contexts/AuthContext';
+import '../styles/pages/SignupPage.css';
 
 function SignupPage() {
   const navigate = useNavigate();
@@ -13,6 +13,7 @@ function SignupPage() {
     birthday: '',
   });
   const [error, setError] = useState('');
+  const { signIn } = useAuth();
 
   const today = new Date().toISOString().split('T')[0]; 
 
@@ -38,28 +39,26 @@ function SignupPage() {
     }
 
 
-    const { data: signUpData, error: signUpError } = await supabase.auth.signUp({
-      email: formData.email,
-      password: formData.password,
-    });
+    const members = JSON.parse(localStorage.getItem('members')) || [];
 
-    if (signUpError) {
-      setError(signUpError.message);
+    if (members.some((member) => member.email === formData.email)) {
+      setError('此電子郵件已註冊');
       return;
     }
 
+    const userId = crypto.randomUUID();
+    const newMember = {
+      id: userId,
+      email: formData.email,
+      password: formData.password,
+      full_name: formData.full_name,
+      phone: formData.phone,
+      birthday: formData.birthday,
+      avatar_url: '',
+    };
 
-    const userId = signUpData.user?.id;
-    if (userId) {
-      await supabase.from('members').insert([
-        {
-          id: userId,
-          full_name: formData.full_name,
-          phone: formData.phone,
-          birthday: formData.birthday,
-        },
-      ]);
-    }
+    localStorage.setItem('members', JSON.stringify([...members, newMember]));
+    signIn({ id: userId, email: formData.email });
 
     navigate('/member');
   };

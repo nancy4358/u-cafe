@@ -1,15 +1,19 @@
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
-import supabase from '../api/supabase';
-import './StoresPage.css';
+import { api } from '../api/client';
+import '../styles/pages/StoresPage.css';
 
 function StoresPage() {
   const [stores, setStores] = useState([]);
 
   useEffect(() => {
     async function fetchStores() {
-      const { data } = await supabase.from('stores').select('*').order('created_at');
-      setStores(data);
+      try {
+        const data = await api.getStores();
+        setStores(data);
+      } catch (error) {
+        console.error(error);
+      }
     }
     fetchStores();
   }, []);

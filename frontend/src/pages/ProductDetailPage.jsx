@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
-import supabase from '../api/supabase';
-import './ProductDetailPage.css';
+import { api } from '../api/client';
+import '../styles/pages/ProductDetailPage.css';
 import { useCart } from '../contexts/CartContext';
 
 function ProductDetailPage() {
@@ -14,20 +14,24 @@ function ProductDetailPage() {
 
   useEffect(() => {
     async function fetchProduct() {
-      const { data } = await supabase
-        .from('products')
-        .select()
-        .eq('slug', slug)
-        .single();
-      setProduct(data);
+      try {
+        const data = await api.getProduct(slug);
+        setProduct(data);
+      } catch (error) {
+        console.error(error);
+      }
     }
     fetchProduct();
   }, [slug]);
 
   useEffect(() => {
     async function fetchCategories() {
-      const { data } = await supabase.from('product_categories').select();
-      setCategories(data);
+      try {
+        const data = await api.getProductCategories();
+        setCategories(data);
+      } catch (error) {
+        console.error(error);
+      }
     }
     fetchCategories();
   }, []);

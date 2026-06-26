@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { Link, useParams, useNavigate } from 'react-router-dom';
-import supabase from '../api/supabase';
-import './ProductsPage.css';
+import { api } from '../api/client';
+import '../styles/pages/ProductsPage.css';
 
 function ProductsPage() {
   const { categorySlug } = useParams(); // 從網址取得目前分類
@@ -13,12 +13,16 @@ function ProductsPage() {
 
   useEffect(() => {
     async function fetchCategories() {
-      const { data } = await supabase.from('product_categories').select();
-      setCategories(data);
+      try {
+        const data = await api.getProductCategories();
+        setCategories(data);
 
-      // 若初次進入 /products 頁無分類，導向第一個分類
-      if (!categorySlug && data.length > 0) {
-        navigate(`/products/${data[0].slug}`, { replace: true });
+        // 若初次進入 /products 頁無分類，導向第一個分類
+        if (!categorySlug && data.length > 0) {
+          navigate(`/products/${data[0].slug}`, { replace: true });
+        }
+      } catch (error) {
+        console.error(error);
       }
     }
     fetchCategories();
@@ -27,19 +31,13 @@ function ProductsPage() {
   useEffect(() => {
     if (!categorySlug) return;
     async function fetchProducts() {
-      const { data: categoryData } = await supabase
-        .from('product_categories')
-        .select('id')
-        .eq('slug', categorySlug)
-        .single();
-
-      const { data: productsData } = await supabase
-        .from('products')
-        .select()
-        .eq('category_id', categoryData.id);
-
-      setProducts(productsData);
-      setActiveCategory(categorySlug);
+      try {
+        const productsData = await api.getProducts(categorySlug);
+        setProducts(productsData);
+        setActiveCategory(categorySlug);
+      } catch (error) {
+        console.error(error);
+      }
     }
     fetchProducts();
   }, [categorySlug]);

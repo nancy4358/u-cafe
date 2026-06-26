@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
-import supabase from '../api/supabase';
-import './CategoryGrid.css';
+import { api } from '../api/client';
+import '../styles/components/CategoryGrid.css';
 
 function CategoryGrid() {
   const [categories, setCategories] = useState([]);
@@ -9,10 +9,16 @@ function CategoryGrid() {
 
   useEffect(() => {
     async function fetchData() {
-      const { data: catData } = await supabase.from('categories').select('*').order('created_at');
-      setCategories(catData || []);
-      const { data: bannerData } = await supabase.from('category_banners').select('*').order('created_at');
-      setBanners(bannerData || []);
+      try {
+        const [catData, bannerData] = await Promise.all([
+          api.getCategories(),
+          api.getCategoryBanners(),
+        ]);
+        setCategories(catData || []);
+        setBanners(bannerData || []);
+      } catch (error) {
+        console.error(error);
+      }
     }
     fetchData();
   }, []);

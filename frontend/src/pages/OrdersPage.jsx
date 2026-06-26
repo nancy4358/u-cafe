@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import './OrdersPage.css'
+import '../styles/pages/OrdersPage.css'
 
 function OrdersPage() {
   const [orders, setOrders] = useState([]);

@@ -1,4 +1,4 @@
-import './FaqPage.css';
+import '../styles/pages/FaqPage.css';
 import { useState } from 'react';
 
 const faqs = [
